@@ -35,9 +35,13 @@
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
+                    @if (Auth::check())
+                        <ul class="nav navbar-nav">
+                            <li{!! Route::is('categories.*') ? ' class="active"' : '' !!}>
+                                <a href="{{ route('categories.index') }}">Categories</a>
+                            </li>
+                        </ul>
+                    @endif
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
