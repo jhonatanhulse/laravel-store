@@ -29,10 +29,37 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Category List</div>
                 <div class="panel-body">
-                    No categories found
+                    @if ($categories->total() > 0)
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($categories as $category)
+                                    <tr>
+                                        <td>{{ $category->id }}</td>
+                                        <td>{{ $category->name }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @else
+                        No categories found
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+
+    @if ($categories->lastPage() > 1)
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 text-right">
+                {!! $categories->links() !!}
+            </div>
+        </div>
+    @endif
 </div>
 @endsection
