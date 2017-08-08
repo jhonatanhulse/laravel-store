@@ -36,6 +36,7 @@
                                     <th>#</th>
                                     <th>Name</th>
                                     <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,7 +45,14 @@
                                         <td>{{ $category->id }}</td>
                                         <td>{{ $category->name }}</td>
                                         <td>
-                                            <a href="{{ route('categories.edit', ['id' => $category->id]) }}">Edit</a>
+                                            <button class="btn-link" onclick="window.location = '{{ route('categories.edit', ['id' => $category->id]) }}'">Edit</button>
+                                        </td>
+                                        <td>
+                                            <form action="{{ route('categories.destroy', ['id' => $category->id]) }}" method="POST">
+                                                {{ csrf_field() }}
+                                                {{ method_field('DELETE') }}
+                                                <button type="submit" class="btn-link">Remove</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
