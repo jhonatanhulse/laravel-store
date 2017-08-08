@@ -35,6 +35,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -42,6 +43,9 @@
                                     <tr>
                                         <td>{{ $category->id }}</td>
                                         <td>{{ $category->name }}</td>
+                                        <td>
+                                            <a href="{{ route('categories.edit', ['id' => $category->id]) }}">Edit</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

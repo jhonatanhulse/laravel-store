@@ -70,7 +70,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('categories.edit', ['category' => $category]);
     }
 
     /**
@@ -82,7 +82,18 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id
+        ]);
+
+        $category->update($request->all());
+
+        return redirect()
+            ->route('categories.index')
+            ->with('alert', [
+                'type' => 'success',
+                'message' => 'Category updated'
+            ]);
     }
 
     /**
