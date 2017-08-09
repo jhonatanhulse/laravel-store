@@ -38,6 +38,7 @@
                                     <th>Price</th>
                                     <th>Category</th>
                                     <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -49,6 +50,13 @@
                                         <td>{{ $product->category->name }}</td>
                                         <td>
                                             <button class="btn-link" onclick="window.location = '{{ route('products.edit', ['id' => $product->id]) }}'">Edit</button>
+                                        </td>
+                                        <td>
+                                            <form action="{{ route('products.destroy', ['id' => $product->id]) }}" method="POST">
+                                                {{ csrf_field() }}
+                                                {{ method_field('DELETE') }}
+                                                <button type="submit" class="btn-link">Remove</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
