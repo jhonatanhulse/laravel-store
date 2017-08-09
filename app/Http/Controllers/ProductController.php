@@ -25,7 +25,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+
+        return view('products.create', ['categories' => $categories]);
     }
 
     /**
@@ -36,7 +38,23 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'category' => 'required|integer|exists:categories,id',
+            'description' => 'required|string'
+        ]);
+
+        $product = new Product($request->all());
+        $product->category()->associate($request->category);
+        $product->save();
+
+        return redirect()
+            ->route('products.index')
+            ->with('alert', [
+                'type' => 'success',
+                'message' => 'Product created'
+            ]);
     }
 
     /**
