@@ -37,6 +37,7 @@
                                     <th>Name</th>
                                     <th>Price</th>
                                     <th>Category</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,6 +47,9 @@
                                         <td>{{ $product->name }}</td>
                                         <td>{{ $product->price }}</td>
                                         <td>{{ $product->category->name }}</td>
+                                        <td>
+                                            <button class="btn-link" onclick="window.location = '{{ route('products.edit', ['id' => $product->id]) }}'">Edit</button>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

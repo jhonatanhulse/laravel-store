@@ -78,7 +78,12 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $categories = Category::all();
+
+        return view('products.edit', [
+            'categories' => $categories,
+            'product' => $product
+        ]);
     }
 
     /**
@@ -90,7 +95,23 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'category' => 'required|integer|exists:categories,id',
+            'description' => 'required|string'
+        ]);
+
+        $product->fill($request->all());
+        $product->category()->associate($request->category);
+        $product->save();
+
+        return redirect()
+            ->route('products.index')
+            ->with('alert', [
+                'type' => 'success',
+                'message' => 'Product updated'
+            ]);
     }
 
     /**
