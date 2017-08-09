@@ -29,10 +29,41 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Product List</div>
                 <div class="panel-body">
-                    No products found
+                    @if ($products->total() > 0)
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Category</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($products as $product)
+                                    <tr>
+                                        <td>{{ $product->id }}</td>
+                                        <td>{{ $product->name }}</td>
+                                        <td>{{ $product->price }}</td>
+                                        <td>{{ $product->category->name }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @else
+                        No products found
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+
+    @if ($products->lastPage() > 1)
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 text-right">
+                {!! $products->links() !!}
+            </div>
+        </div>
+    @endif
 </div>
 @endsection
