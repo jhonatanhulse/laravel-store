@@ -40,6 +40,9 @@
                             <li{!! Route::is('categories.*') ? ' class="active"' : '' !!}>
                                 <a href="{{ route('categories.index') }}">Categories</a>
                             </li>
+                            <li{!! Route::is('products.*') ? ' class="active"' : '' !!}>
+                                <a href="{{ route('products.index') }}">Products</a>
+                            </li>
                         </ul>
                     @endif
 
