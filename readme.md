@@ -29,6 +29,7 @@ MAIL_ENCRYPTION=tls
 Execute migrations running `php artisan migrate`.
 
 Configure `crontab` to execute scheduled tasks using the command `crontab -e` and adding the following line in the file:
+
 `* * * * * php /path_to_your_project/artisan schedule:run >> /dev/null 2>&1`
 
 ## Running
