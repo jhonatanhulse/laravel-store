@@ -1,3 +1,5 @@
+#### TL;DR
+
 ## Setting up
 
 After clonning the repository run `php composer.phar install`, this command will install dependencies and generate the `.env` file.
