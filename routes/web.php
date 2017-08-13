@@ -21,5 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::middleware(['auth'])->group(function() {
     Route::resource('categories', 'CategoryController');
+
+    Route::post('products/import', 'ProductController@import')->name('products.import');
     Route::resource('products', 'ProductController');
 });

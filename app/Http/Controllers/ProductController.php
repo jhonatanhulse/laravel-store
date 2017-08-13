@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Importation;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Ramsey\Uuid\Uuid;
 
 class ProductController extends Controller
 {
@@ -129,6 +132,35 @@ class ProductController extends Controller
             ->with('alert', [
                 'type' => 'success',
                 'message' => 'Product deleted'
+            ]);
+    }
+
+    /**
+     * Upload importation file.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function import(Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|mimes:csv,txt|max:5120'
+        ]);
+
+        $location = 'upload/importations';
+        $filename = Uuid::uuid4()->toString() . '.csv';
+
+        $importation = new Importation(['path' => "app/${location}/${filename}"]);
+        $importation->user()->associate(Auth::user()->id);
+        $importation->save();
+
+        $request->file->storeAs($location, $filename);
+
+        return redirect()
+            ->route('products.index')
+            ->with('alert', [
+                'type' => 'success',
+                'message' => 'File uploaded. You will be notified by email when importation finish'
             ]);
     }
 }
