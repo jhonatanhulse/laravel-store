@@ -1,51 +1,84 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+## Setting up
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+After clonning the repository run `php composer.phar install`, this command will install dependencies and generate the `.env` file.
 
-## About Laravel
+Configure the database connection in `.env` file like:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+```
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=laravel-store
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+For simplicity the mail service is expecting to be Gmail SMTP Server. Its configuration can be made by allowing less secure apps in your Gmail Account Settings (https://myaccount.google.com/security#connectedapps) and edit `.env` file like following:
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+```
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your_email@gmail.com
+MAIL_PASSWORD=your_email_password
+MAIL_ENCRYPTION=tls
+```
 
-## Learning Laravel
+Execute migrations running `php artisan migrate`.
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+Configure `crontab` to execute scheduled tasks using the command `crontab -e` and adding the following line in the file:
+`* * * * * php /path_to_your_project/artisan schedule:run >> /dev/null 2>&1`
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+## Running
 
-## Laravel Sponsors
+To run the application you can just execute the command `php artisan serve` and it will be accessible through the address `localhost:8000`.
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](http://patreon.com/taylorotwell):
+## Considerations
 
-- **[Vehikl](http://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Styde](https://styde.net)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
+Because of lack of time to spend in the development of this Laravel Framework example I focused in the simplest solution which may not be the best approach for the same problem in production environments.
 
-## Contributing
+### TDD
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+Tests were not implemented because of lack of time and if I would implement I would use the Test Last approach.
 
-## Security Vulnerabilities
+### I18n
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+Strings were statically fixed in the source code which make difficult implementation of i18n. Ideally it should be made using Laravel I18n.
 
-## License
+### Request validation
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+The validation is being performed directly in the controller methods. Ideally it should be done using Laravel Form Request Validation (https://laravel.com/docs/5.4/validation#form-request-validation)
+
+### Database access
+
+The database access is being performed directly through Eloquent models which make difficult to implement some features (e.g. cache strategy) and DRY principle. Ideally it could be done using Repository Pattern with Laravel Contracts and Dependency Injection.
+
+### Product importation
+
+The product importation is expecting that the CSV file has the header in the first line with the exact column names and files with size lower than 5MB as the following example:
+
+```
+name,price,category,description
+p01,101.01,c01,description01
+p02,102.02,c01,description02
+p03,103.03,c02,description03
+p04,104.04,c02,description04
+p05,105.05,c03,description05
+p06,106.06,c03,description06
+p07,107.07,c04,description07
+p08,108.08,c04,description08
+p09,109.09,c05,description09
+p10,110.10,c05,description10
+p11,111.11,c06,description11
+p12,112.12,c06,description12
+p13,113.13,c07,description13
+p14,114.14,c07,description14
+p15,115.15,c08,description15
+p16,116.16,c08,description16
+p17,117.17,c09,description17
+p18,118.18,c09,description18
+p19,119.19,c10,description19
+p20,120.20,c10,description20
+```
+
+The product validation is not being performed so any invalid value will cause the importation to fail. Moreover this feature is not dealing with files with large ammount of rows or large volume of imporations submitted. Ideally it should proccess valid rows in CSV file and return the rows which were not proccessed with its errors. To deal with larger files it could be done by limiting numbers of rows read like Laravel Excel supports (http://www.maatwebsite.nl/laravel-excel/docs/import). Analogously table pagination could be done to deal with with larger volume of imports.
